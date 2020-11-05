@@ -1,0 +1,46 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:11.5-alpine
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_USER: "postgres"
+    networks:
+      overlay:
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+    depends_on:
+      - postgres
+    networks:
+      overlay:
+  kafka:
+    image: wurstmeister/kafka
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    networks:
+      overlay:
+  kafka-connect:
+    image: 482506117024.dkr.ecr.eu-west-1.amazonaws.com/data/kafka-connect
+    ports:
+      - "8083:8083"
+    depends_on:
+      - kafka
+    environment:
+      KAFKA_BROKERS: kafka:9092
+    networks:
+      overlay:
+volumes:
+  db_data:
+networks:
+  overlay:
