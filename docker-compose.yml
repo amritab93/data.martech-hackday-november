@@ -1,7 +1,7 @@
 version: '3'
 services:
   postgres:
-    image: postgres:11.5-alpine
+    image: debezium/postgres
     ports:
       - "5432:5432"
     volumes:
@@ -31,7 +31,7 @@ services:
     networks:
       overlay:
   kafka-connect:
-    image: 482506117024.dkr.ecr.eu-west-1.amazonaws.com/data/kafka-connect
+    image: data/martech/dev:latest
     ports:
       - "8083:8083"
     depends_on:
