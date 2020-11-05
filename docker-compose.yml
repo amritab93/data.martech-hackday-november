@@ -31,7 +31,7 @@ services:
     networks:
       overlay:
   kafka-connect:
-    image: data/martech/dev:latest
+    image: 482506117024.dkr.ecr.eu-west-1.amazonaws.com/data/martech/dev:latest
     ports:
       - "8083:8083"
     depends_on:
