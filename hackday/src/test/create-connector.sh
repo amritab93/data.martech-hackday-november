@@ -1,8 +1,18 @@
 #!/bin/bash
 set -e
 
-STATE=NOT_RUNNING
+STATE="NOT_RUNNING"
 
-curl -X POST -H "Content-Type: application/json" --data @connectors/postgres.json ${KAFKA_CONNECT_URL}/connectors
+curl -X POST -H "Content-Type: application/json" --data @connectors/postgres.json "${KAFKA_CONNECT_URL}"/connectors
+#wait until the connector is initialized
+sleep 5
 
-STATE=$(docker-compose -f ./docker-compose.yml exec -T kafka-connect curl -X GET -H "Content-Type: application/json" "$KAFKA_CONNECT_URL"/connectors/"$NAME"/status | jq -r '.tasks[0].state')
+STATE=$(curl -X GET -H "Content-Type: application/json" "${KAFKA_CONNECT_URL}"/connectors/testPostgresConnector/status | jq -r '.tasks[0].state')
+
+if [ "${STATE}" == "RUNNING" ]
+then
+  echo "Connector is running, all good."
+else
+  echo "Something went wrong with the connector, it is not running."
+  exit 1
+fi

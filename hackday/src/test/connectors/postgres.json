@@ -8,6 +8,8 @@
     "database.password": "postgres",
     "database.dbname" : "postgres",
     "database.server.name": "datamartech-hackday-november_postgres_1",
-    "table.include.list": "accounts"
+    "table.include.list": "company",
+    "key.converter.schemas.enable": "false",
+    "value.converter.schemas.enable": "false"
   }
 }
